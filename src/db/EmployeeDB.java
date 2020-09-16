@@ -17,15 +17,17 @@ public class EmployeeDB {
     }
 
     public void addEmployee(Employee employee) {
-        //TODO: Implement
+        employees.add(employee);
     }
 
     public void deleteEmployee(Employee employee) {
-        //TODO: Implement
+        employees.remove(employee);
     }
 
     public void updateEmployee(Employee employee) {
-        //TODO: Implement
+    	//Get Index of Employee in Arraylist
+       int indexOf = employees.indexOf(employee);
+       employees.set(indexOf, employee);
     }
 
     private void addMockData() {

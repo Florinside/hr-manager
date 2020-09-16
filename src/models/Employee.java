@@ -16,7 +16,7 @@ public class Employee {
 
     public Employee() {
     }
-
+ 
     public Employee(String prename, String surname, String jobDescription, Date birthdate, Double salary, Date employmentDate) {
         this.id = HRManagerUtil.generateId();
         this.prename = prename;
@@ -80,4 +80,11 @@ public class Employee {
     public String getId() {
         return id;
     }
+
+	@Override
+	public String toString() {
+		return "Employee [id=" + id + ", prename=" + prename + ", surname=" + surname + ", jobDescription="
+				+ jobDescription + ", birthdate=" + birthdate + ", salary=" + salary + ", employmentDate="
+				+ employmentDate + "]";
+	}
 }
