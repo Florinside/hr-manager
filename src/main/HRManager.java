@@ -2,6 +2,7 @@ package main;
 
 import view.View;
 
+import java.text.ParseException;
 import java.util.Scanner;
 
 public class HRManager {
@@ -9,19 +10,19 @@ public class HRManager {
 	private static final String LINE = "--------------------------------------";
 
 	private static final String[] NAVIGATION_OPTIONS = new String[] { "Exit", "Add Employee", "Edit Employee",
-			"List Employees", "Delete Employee" };
+			"List Employees", "Delete Employee", "List Employees (Age Desc)","List Employees (Age Asc)","List Employees (Surname Asc)" };
 
 	private static final Scanner scanner = new Scanner(System.in);
 
 	private static View view = new View();
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws ParseException {
 		while (true) {
 			printMenu();
 		}
 	}
 
-	private static void printMenu() {
+	private static void printMenu() throws ParseException {
 		System.out.println(LINE);
 		System.out.println("-------------" + " HR Manager " + "-------------");
 		System.out.println(LINE);
@@ -35,7 +36,7 @@ public class HRManager {
 
 	}
 
-	private static void selectMenu() {
+	private static void selectMenu() throws ParseException {
 		
 		//While input != int
 		while (!scanner.hasNextInt()) {
@@ -46,7 +47,7 @@ public class HRManager {
 		showMenu(selectedMenuId);
 	}
  
-	private static void showMenu(int selectedMenuId) {
+	private static void showMenu(int selectedMenuId) throws ParseException {
 		switch (selectedMenuId) {
 		case 1:
 			System.exit(0);
@@ -62,6 +63,15 @@ public class HRManager {
 			break;
 		case 5:
 			view.showDeleteEmployee();
+			break;
+		case 6:
+			view.showEmployeesAgeDesc();
+			break;
+		case 7:
+			view.showEmployeesAgeAsc();
+			break;
+		case 8:
+			view.showEmployeesSurnameAsc();
 			break;
 		default:
 			System.out.println("You selected a invalid option. please select again.");

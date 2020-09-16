@@ -2,6 +2,9 @@ package view;
 
 import java.io.FileWriter;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +13,9 @@ import java.util.stream.Collectors;
 
 import db.EmployeeDB;
 import models.Employee;
+import sorter.SortByAgeAsc;
+import sorter.SortByAgeDesc;
+import sorter.SortBySurnameAsc;
 import util.HRManagerUtil;
 
 public class View {
@@ -19,8 +25,9 @@ public class View {
 
 	/**
 	 * Show the interface to add a employee to the db
+	 * @throws ParseException 
 	 */
-	public void showAddEmployee() {
+	public void showAddEmployee() throws ParseException {
 
 		//Input all Stuff needed for Object generation
 		System.out.println("Prename: ");
@@ -35,6 +42,7 @@ public class View {
 			birthdate = HRManagerUtil.formatter.parse(scanner.next());
 		} catch (ParseException e1) {
 			System.out.println("Invalid Date Format!");
+			birthdate = HRManagerUtil.formatter.parse("01.01.1970");
 		}
 
 		System.out.println("Jobdescription: ");
@@ -54,6 +62,7 @@ public class View {
 			employmentDate = HRManagerUtil.formatter.parse(scanner.next());
 		} catch (ParseException e2) {
 			System.out.println("Invalid Date Format!");
+			employmentDate= HRManagerUtil.formatter.parse("01.01.1970");
 		}
 		//Make a new Employee
 		Employee e = new Employee(prename, surname, jobDescription, birthdate, salary, employmentDate);
@@ -65,8 +74,9 @@ public class View {
 
 	/**
 	 * Show the interface to edit a employee to the db
+	 * @throws ParseException 
 	 */
-	public void showEditEmployee() {
+	public void showEditEmployee() throws ParseException {
 		showListEmployees();
 		//Get Object with Surname and Prename
 		System.out.println("Enter the Prename of the Person you want to delete: ");
@@ -109,6 +119,7 @@ public class View {
 					editEmployee.setBirthdate(HRManagerUtil.formatter.parse(scanner.next()));
 				} catch (ParseException e2) {
 					System.out.println("Invalid Date Format!");
+					editEmployee.setBirthdate(HRManagerUtil.formatter.parse("01.01.1970"));
 				}
 				break;
 			case 4:
@@ -125,6 +136,7 @@ public class View {
 					editEmployee.setEmploymentDate(HRManagerUtil.formatter.parse(scanner.next()));
 				} catch (ParseException e2) {
 					System.out.println("Invalid Date Format!");
+					editEmployee.setEmploymentDate(HRManagerUtil.formatter.parse("01.01.1970"));
 				}
 				break;
 			default:
@@ -133,6 +145,9 @@ public class View {
 			}
 
 			db.updateEmployee(editEmployee);
+		}
+		else {
+			System.out.println("Employee dosen't exist");
 		}
 	}
 
@@ -169,6 +184,9 @@ public class View {
 			db.deleteEmployee(delEmployee);
 			System.out.println("Deleted!");
 		}
+		else {
+			System.out.println("Employee dosen't exist");
+		}
 	}
 
 	/**
@@ -179,6 +197,54 @@ public class View {
 	private void showEmployee(Employee e) {
 		System.out.printf("\n %10s %30s %22s %40s %10s %22s", e.getId(), e.getPrename() + " " + e.getSurname(),
 				e.getBirthdate(), e.getJobDescription(), e.getSalary(), e.getEmploymentDate());
+	}
+	
+	/**
+	 * Method to print all Employees sorted by Age Desc
+	 */
+	public void showEmployeesAgeDesc() {
+		List<Employee> allEmployees = db.getEmployees();
+		allEmployees.sort(new SortByAgeDesc());
+		System.out.printf("%10s %30s %22s %40s %10s %22s", "Id", "Name", "Birthdate", "Jobdescription", "Salary",
+				"EmploymentDate");
+		for (Employee e : allEmployees) {
+
+			showEmployee(e);
+			Period period = Period.between(e.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now());
+			System.out.print(" " +period.getYears());
+		}
+		System.out.println("");
+	}
+	/**
+	 * Method to print all Employees sorted by Age Asc
+	 */
+	public void showEmployeesAgeAsc() {
+		List<Employee> allEmployees = db.getEmployees();
+		allEmployees.sort(new SortByAgeAsc());
+		System.out.printf("%10s %30s %22s %40s %10s %22s %10s", "Id", "Name", "Birthdate", "Jobdescription", "Salary",
+				"EmploymentDate", "Age");
+		for (Employee e : allEmployees) {
+
+			showEmployee(e);
+			Period period = Period.between(e.getBirthdate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), LocalDate.now());
+			System.out.print(" " +period.getYears());
+		}
+		System.out.println("");
+	}
+	
+	/**
+	 * Method to print all Employees sorted by Surname Asc
+	 */
+	public void showEmployeesSurnameAsc() {
+		List<Employee> allEmployees = db.getEmployees();
+		allEmployees.sort(new SortBySurnameAsc());
+		System.out.printf("%10s %30s %22s %40s %10s %22s %10s", "Id", "Name", "Birthdate", "Jobdescription", "Salary",
+				"EmploymentDate", "Age");
+		for (Employee e : allEmployees) {
+
+			showEmployee(e);
+		}
+		System.out.println("");
 	}
 
 }
